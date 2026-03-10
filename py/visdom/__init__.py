@@ -1732,7 +1732,7 @@ class Visdom(object):
         return self._send(data_to_send, endpoint=endpoint)
 
     @pytorch_wrap
-    def line(self, Y, X=None, win=None, env=None, opts=None, update=None, name=None):
+    self, Y, X=None, win=None, env=None, opts=None, update=None, name=None):
         """
         This function draws a line plot. It takes in an `N` or `NxM` tensor
         `Y` that specifies the values of the `M` lines (that connect `N` points)
@@ -1784,7 +1784,10 @@ class Visdom(object):
 
         if Y.ndim == 2 and X.ndim == 1:
             X = np.tile(X, (Y.shape[1], 1)).transpose()
-
+        # FIX: handle Y with shape (N,1)
+        if Y.ndim == 2 and Y.shape[1] == 1:
+            Y = Y.reshape(-1)
+            
         assert X.shape == Y.shape, "X and Y should be the same shape"
 
         opts = {} if opts is None else opts
